@@ -3,9 +3,28 @@ import { Movie } from './components/movie';
 import { TitleBar } from './components/title-bar';
 import { Button } from './components/button';
 import { useToggle } from './hooks/use-toggle';
+import { loadMovies } from './api';
+import { BusyContainer } from './components/busy-container';
+
+function useMovieData() {
+  const [movies, setMovies] = React.useState([]);
+  const [isLoading, setIsLoading] = React.useState(true);
+  React.useEffect(() => {
+    loadMovies().then(movieData => {
+      setMovies(movieData);
+      setIsLoading(false);
+    });
+  }, []);
+
+  return {
+    movies,
+    isLoading
+  };
+}
 
 function App() {
   const [moviesShown, toggleShowMovies] = useToggle(false);
+  const { movies, isLoading } = useMovieData();
 
   return (
     <div>
@@ -18,14 +37,15 @@ function App() {
         </Button>
       </div>
       {moviesShown && (
-        <>
-          <Movie name="Aquaman" releaseDate="2018-12-07" />
-          <Movie name="Bumblebee" releaseDate="2018-12-15" />
-          <Movie
-            name="Fantastic Beasts: The Crimes of Grindelwald"
-            releaseDate="2018-11-14"
-          />
-        </>
+        <BusyContainer isLoading={isLoading}>
+          {movies.map(movie => (
+            <Movie
+              name={movie.name}
+              releaseDate={movie.releaseDate}
+              key={movie.id}
+            />
+          ))}
+        </BusyContainer>
       )}
     </div>
   );
