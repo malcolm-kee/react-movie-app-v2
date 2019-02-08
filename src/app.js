@@ -2,9 +2,10 @@ import React from 'react';
 import { Movie } from './components/movie';
 import { TitleBar } from './components/title-bar';
 import { Button } from './components/button';
+import { useToggle } from './hooks/use-toggle';
 
 function App() {
-  const [moviesShown, setShowMovies] = React.useState(false);
+  const [moviesShown, toggleShowMovies] = useToggle(false);
 
   return (
     <div>
@@ -12,8 +13,8 @@ function App() {
         <h1>React Movie App</h1>
       </TitleBar>
       <div className="button-container">
-        <Button onClick={() => setShowMovies(prevShown => !prevShown)}>
-          Show Movies
+        <Button onClick={toggleShowMovies}>
+          {moviesShown ? 'Hide' : 'Show'} Movies
         </Button>
       </div>
       {moviesShown && (
