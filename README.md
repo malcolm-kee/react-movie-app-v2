@@ -1,7 +1,5 @@
 # React Movie App v2
 
-# React Movie App
-
 Code-along sample for [Intro to React JS workshop](https://github.com/malcolm-kee/intro-to-react-js-v2)
 
 [Demo](https://react-movie-app-v2.netlify.com/)
