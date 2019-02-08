@@ -1,12 +1,13 @@
 import React from 'react';
 import { Movie } from './components/movie';
+import { TitleBar } from './components/title-bar';
 
 function App() {
   return (
     <div>
-      <div className="title-bar">
+      <TitleBar>
         <h1>React Movie App</h1>
-      </div>
+      </TitleBar>
       <Movie name="Aquaman" releaseDate="2018-12-07" />
       <Movie name="Bumblebee" releaseDate="2018-12-15" />
       <Movie
