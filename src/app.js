@@ -26,9 +26,41 @@ function useMovieData() {
   };
 }
 
+const useMovieForm = () => {
+  const [name, setName] = React.useState('');
+  const [releaseDate, setReleaseDate] = React.useState('');
+  const [id, setId] = React.useState(undefined);
+  return {
+    setName,
+    setReleaseDate,
+    setId,
+    values: {
+      id,
+      name,
+      releaseDate
+    }
+  };
+};
+
 function App() {
   const [moviesShown, toggleShowMovies] = useToggle(false);
   const { movies, isLoading, loadMoviesData } = useMovieData();
+  const { setName, setReleaseDate, setId, values } = useMovieForm();
+  const [isEdit, setIsEdit] = React.useState(false);
+
+  const selectMovie = movie => {
+    setIsEdit(true);
+    setName(movie.name);
+    setReleaseDate(movie.releaseDate);
+    setId(movie.id);
+  };
+
+  const resetForm = () => {
+    setIsEdit(false);
+    setName('');
+    setReleaseDate('');
+    setId(undefined);
+  };
 
   return (
     <div>
@@ -48,6 +80,7 @@ function App() {
                 <Movie
                   name={movie.name}
                   releaseDate={movie.releaseDate}
+                  onClick={() => selectMovie(movie)}
                   key={movie.id}
                 />
               ))}
@@ -55,7 +88,14 @@ function App() {
           )}
         </div>
         <div>
-          <MovieForm onSubmitSuccess={loadMoviesData} />
+          <MovieForm
+            isEdit={isEdit}
+            values={values}
+            setName={setName}
+            setReleaseDate={setReleaseDate}
+            onSubmitSuccess={loadMoviesData}
+            resetForm={resetForm}
+          />
         </div>
       </div>
     </div>

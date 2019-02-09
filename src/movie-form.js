@@ -1,35 +1,28 @@
 import React from 'react';
-import { createMovie } from './api';
+import { createMovie, saveMovie } from './api';
+import { Button } from './components/button';
 
-const useMovieFormData = () => {
-  const [name, setName] = React.useState('');
-  const [releaseDate, setReleaseDate] = React.useState('');
-  return {
-    setName,
-    setReleaseDate,
-    values: {
-      name,
-      releaseDate
-    }
-  };
-};
-
-export const MovieForm = ({ onSubmitSuccess }) => {
-  const { values, setName, setReleaseDate } = useMovieFormData();
-
+export const MovieForm = ({
+  isEdit,
+  onSubmitSuccess,
+  values,
+  setName,
+  setReleaseDate,
+  resetForm
+}) => {
   const handleSubmit = ev => {
     ev.preventDefault();
-    createMovie(values).then(() => {
+    const req = isEdit ? saveMovie(values) : createMovie(values);
+    req.then(() => {
       onSubmitSuccess();
-      setName('');
-      setReleaseDate('');
+      resetForm();
     });
   };
 
   return (
     <div className="movie-form">
       <form onSubmit={handleSubmit}>
-        <legend>Create Movie</legend>
+        <legend>{isEdit ? 'Edit' : 'Create'} Movie</legend>
         <div className="field">
           <label htmlFor="name" className="label">
             Name
@@ -59,8 +52,9 @@ export const MovieForm = ({ onSubmitSuccess }) => {
         </div>
         <div className="button-container">
           <button type="submit" className="submit-button">
-            Create
+            {isEdit ? 'Save' : 'Create'}
           </button>
+          <Button onClick={resetForm}>Cancel</Button>
         </div>
       </form>
     </div>
