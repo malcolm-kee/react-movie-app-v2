@@ -2,10 +2,11 @@ import React from 'react';
 import { loadMovies } from './api';
 import { BusyContainer } from './components/busy-container';
 import { Button } from './components/button';
-import { Movie } from './components/movie';
 import { TitleBar } from './components/title-bar';
 import { useToggle } from './hooks/use-toggle';
 import { MovieForm } from './movie-form';
+
+const Movie = React.lazy(() => import('./components/movie'));
 
 function useMovieData() {
   const [movies, setMovies] = React.useState([]);
@@ -76,14 +77,16 @@ function App() {
           </div>
           {moviesShown && (
             <BusyContainer isLoading={isLoading}>
-              {movies.map(movie => (
-                <Movie
-                  name={movie.name}
-                  releaseDate={movie.releaseDate}
-                  onClick={() => selectMovie(movie)}
-                  key={movie.id}
-                />
-              ))}
+              <React.Suspense fallback={<span className="spinner" />}>
+                {movies.map(movie => (
+                  <Movie
+                    name={movie.name}
+                    releaseDate={movie.releaseDate}
+                    onClick={() => selectMovie(movie)}
+                    key={movie.id}
+                  />
+                ))}
+              </React.Suspense>
             </BusyContainer>
           )}
         </div>

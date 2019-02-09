@@ -11,3 +11,5 @@ export const Movie = props => (
     <h2>{props.releaseDate}</h2>
   </div>
 );
+
+export default Movie;
