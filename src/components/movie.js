@@ -5,6 +5,7 @@ export const Movie = props => (
     className="movie-container selectable"
     onClick={props.onClick}
     tabIndex={0}
+    data-testid="movie-container"
   >
     <h1>{props.name}</h1>
     <h2>{props.releaseDate}</h2>
