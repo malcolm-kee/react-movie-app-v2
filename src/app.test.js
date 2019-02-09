@@ -1,7 +1,12 @@
 import React from 'react';
-import { cleanup, render, fireEvent, wait } from 'react-testing-library';
-import App from './app';
+import {
+  cleanup,
+  fireEvent,
+  render,
+  waitForElement
+} from 'react-testing-library';
 import * as api from './api';
+import App from './app';
 
 const mockMovieData = [
   {
@@ -34,10 +39,10 @@ describe('<App />', () => {
       .spyOn(api, 'loadMovies')
       .mockImplementation(() => Promise.resolve(mockMovieData));
 
-    const { getByText, getAllByTestId } = render(<App />);
+    const { getByText, getAllByTestId, getByTestId } = render(<App />);
     fireEvent.click(getByText('Show Movies'));
 
-    await wait();
+    await waitForElement(() => getByTestId('movie-container'));
 
     expect(getAllByTestId('movie-container').length).toBe(mockMovieData.length);
 
@@ -52,7 +57,7 @@ describe('<App />', () => {
     const { getByText, getByTestId, getByLabelText } = render(<App />);
     fireEvent.click(getByText('Show Movies'));
 
-    await wait();
+    await waitForElement(() => getByTestId('movie-container'));
 
     expect(getByText('Create Movie')).not.toBeNull();
 
