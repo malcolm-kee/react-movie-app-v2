@@ -3,6 +3,7 @@ import { loadMovies } from './api';
 import { BusyContainer } from './components/busy-container';
 import { Button } from './components/button';
 import { TitleBar } from './components/title-bar';
+import { useDebouncedEffect } from './hooks/use-debounced-effect';
 import { useToggle } from './hooks/use-toggle';
 import { MovieForm } from './movie-form';
 
@@ -11,14 +12,13 @@ const Movie = React.lazy(() => import('./components/movie'));
 function useMovieData() {
   const [movies, setMovies] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
-  const loadMoviesData = () => {
+  const loadMoviesData = searchKey => {
     setIsLoading(true);
-    loadMovies().then(movieData => {
+    loadMovies(searchKey).then(movieData => {
       setMovies(movieData);
       setIsLoading(false);
     });
   };
-  React.useEffect(loadMoviesData, []);
 
   return {
     movies,
@@ -48,6 +48,9 @@ function App() {
   const { movies, isLoading, loadMoviesData } = useMovieData();
   const { setName, setReleaseDate, setId, values } = useMovieForm();
   const [isEdit, setIsEdit] = React.useState(false);
+  const [searchKey, setSearchKey] = React.useState('');
+
+  useDebouncedEffect(() => loadMoviesData(searchKey), [searchKey], 1000);
 
   const selectMovie = movie => {
     setIsEdit(true);
@@ -77,6 +80,14 @@ function App() {
           </div>
           {moviesShown && (
             <BusyContainer isLoading={isLoading}>
+              <div className="field">
+                <input
+                  value={searchKey}
+                  onChange={ev => setSearchKey(ev.target.value)}
+                  className="input"
+                  placeholder="Search for movie..."
+                />
+              </div>
               <React.Suspense fallback={<span className="spinner" />}>
                 {movies.map(movie => (
                   <Movie

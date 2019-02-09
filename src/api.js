@@ -2,9 +2,9 @@ const getAxios = () => import('axios');
 
 const MOVIE_ENDPOINT = 'https://react-intro-movies.herokuapp.com/movies';
 
-export const loadMovies = () =>
+export const loadMovies = searchKey =>
   getAxios()
-    .then(axios => axios.default(MOVIE_ENDPOINT))
+    .then(axios => axios.default(MOVIE_ENDPOINT, { params: { q: searchKey } }))
     .then(res => res.data);
 
 export const createMovie = movie =>
