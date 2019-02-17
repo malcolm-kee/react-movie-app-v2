@@ -4,6 +4,14 @@ export const Movie = props => (
   <div
     className="movie-container selectable"
     onClick={props.onClick}
+    onKeyDown={e => {
+      if (
+        e.keyCode === 32 || // space
+        e.keyCode === 13 // enter
+      ) {
+        props.onClick();
+      }
+    }}
     tabIndex={0}
     data-testid="movie-container"
   >
