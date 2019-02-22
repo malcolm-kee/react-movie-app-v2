@@ -1,4 +1,5 @@
 import React from 'react';
+import { CSSTransition } from 'react-transition-group';
 import { loadMovies } from './api';
 import { BusyContainer } from './components/busy-container';
 import { Button } from './components/button';
@@ -78,7 +79,12 @@ function App() {
               {moviesShown ? 'Hide' : 'Show'} Movies
             </Button>
           </div>
-          {moviesShown && (
+          <CSSTransition
+            classNames="panel"
+            timeout={500}
+            in={moviesShown}
+            unmountOnExit
+          >
             <BusyContainer isLoading={isLoading}>
               <div className="field">
                 <input
@@ -89,17 +95,19 @@ function App() {
                 />
               </div>
               <React.Suspense fallback={<span className="spinner" />}>
-                {movies.map(movie => (
-                  <Movie
-                    name={movie.name}
-                    releaseDate={movie.releaseDate}
-                    onClick={() => selectMovie(movie)}
-                    key={movie.id}
-                  />
-                ))}
+                <div className="movie-list-container">
+                  {movies.map(movie => (
+                    <Movie
+                      name={movie.name}
+                      releaseDate={movie.releaseDate}
+                      onClick={() => selectMovie(movie)}
+                      key={movie.id}
+                    />
+                  ))}
+                </div>
               </React.Suspense>
             </BusyContainer>
-          )}
+          </CSSTransition>
         </div>
         <div>
           <MovieForm
